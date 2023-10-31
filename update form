@@ -1,0 +1,88 @@
+<?php
+                        try {
+                            // include 'config.php';
+                            $servername = "localhost"; //127.0.0.1
+                            $database = "getclothed";
+                            $username = "root";
+                            $password = "root";
+
+                            $pdo = new PDO("mysql:host=$servername;dbname=$database", $username, $password);
+                            $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+
+
+                            $sql = "SELECT * FROM items";
+                            $stmt = $pdo->query($sql);
+
+                            while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                                $productCode = $row['PRODUCT_NO'];
+                                $item_name = $row['ITEM_NAME'];
+                                $item_type = $row['ITEM_TYPE'];
+                                $item_color = $row['ITEM_COLOR'];
+                                $price = $row['PRICE'];
+                                $item_tally = $row['ITEM_TALLY'];
+                                $item_id = $row['ITEM_ID']; ?>
+
+                                <tr>
+                                    <th scope="row"><?php echo $productCode ?> </th>
+                                    <td><?php echo $item_name ?></td>
+                                    <td><?php echo $item_type ?></td>
+                                    <td><?php echo $item_color ?></td>
+                                    <td><?php echo $price ?></td>
+                                    <td><?php echo $item_tally ?></td>
+                                    <td>
+                                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#updateModal<?php echo $productCode ?>">Update</button>
+                                        <button class="btn btn-danger"><a href="delete.php?deleteid=' . $item_id . '">Delete</a></button>
+                                    </td>
+                                    <td>
+                                        <div class="modal" id="updateModal<?php echo $productCode ?>">
+                                            <div class="modal-dialog">
+                                                <div class="modal-content">
+
+                                                    <!-- Modal Header -->
+                                                    <div class="modal-header">
+                                                        <h4 class="modal-title">Update Item</h4>
+                                                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                                    </div>
+
+                                                    <!-- Modal body -->
+                                                    <div class="modal-body">
+                                                        <form action="update.php" method="POST">
+                                                            <input type="text" placeholder="Item name" name="item_name" id="item_name" required>
+                                                            <span class="error"><?php echo $item_nameErr ?></span><br>
+                                                            <input type="hidden" name="updateKey" value="<?php echo $productCode; ?>" />
+
+                                                            <input type="text" placeholder="Item type" name="item_type" id="item_type" required>
+                                                            <span class="error"><?php echo $item_typeErr ?></span><br>
+
+                                                            <input type="text" placeholder="Item color" name="item_color" id="item_color" required>
+                                                            <span class="error"><?php echo $item_colorErr ?></span><br>
+
+                                                            <input type="number" placeholder="Price" name="Price" id="Price" required>
+                                                            <span class="error"><?php echo $priceErr ?></span><br>
+
+                                                            <input type="text" placeholder="Item tally" name="item_tally" id="item_tally" required>
+                                                            <span class="error"><?php echo $item_typeErr ?></span><br>
+
+                                                            <input type="submit" name="update" id="update" value="Update">
+                                                        </form>
+                                                    </div>
+
+                                                    <!-- Modal footer -->
+                                                    <div class="modal-footer">
+                                                        <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
+                                                    </div>
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+
+
+
+                        <?php }
+                        } catch (PDOException $e) {
+                            echo "Error: " . $e->getMessage();
+                        }
+                        ?>
